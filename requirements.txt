@@ -1,0 +1,12 @@
+python==3.8
+pytorch==1.9.1
+torchvision==0.10.1
+torchaudio==0.9.1
+matplotlib
+numpy
+opencv
+pandas
+scikit-image
+scipy
+tensorboard
+tifffile
