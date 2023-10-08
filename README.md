@@ -4,7 +4,7 @@ DeepDefinite is a universally applicable algorithm for neuron extraction. Its de
 
 
 
----
+
 
 ## **Getting Started**
 
@@ -54,7 +54,7 @@ If you just want to have a try and skip the training process, please put our pre
 
 
 
----
+
 
 ## **Remove the background**
 
@@ -150,7 +150,7 @@ This command will perform thresholding on the processed videos.
 
 
 
----
+
 
 ## Segmentation
 
