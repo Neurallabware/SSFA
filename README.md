@@ -2,11 +2,18 @@
 
 DeepDefinite is a universally applicable algorithm for neuron extraction. DeepDefinite is self-supervised and performs well. Its detailed description and benchmarking can be found in [(##############)](http://www.nature.com/articles/ncomms12190).
 
-
-
-[TOC]
-
-
+- [DeepDefinite](#deepdefinite)
+  - [**Getting Started**](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Install](#install)
+    - [Prepare the dataset](#prepare-the-dataset)
+    - [Prepare the pretrained weights](#prepare-the-pretrained-weights)
+  - [**Remove the background**](#remove-the-background)
+    - [Training](#training)
+    - [Background removal](#background-removal)
+  - [**Segmentation**](#segmentation)
+    - [Training](#training-1)
+    - [Segmentation](#segmentation-1)
 
 ## **Getting Started**
 
@@ -178,7 +185,9 @@ python -u ./codes/BG_Rejection/postprocessing_discard.py \
 
 This command will perform thresholding on the processed videos. 
 
-## Segmentation
+
+
+## **Segmentation**
 
 ### Training
 
