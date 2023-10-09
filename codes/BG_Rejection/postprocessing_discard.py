@@ -35,7 +35,7 @@ def main(args):
     video_list = os.listdir(video_path)
     video_list.sort(key=lambda x: int(x.split('.')[0]))
     for i in range(len(video_list)):
-        print(i + 1)
+        print(f"********** Video {i + 1} begins! **********")
         start_time = time.time()
         video = tifffile.imread(os.path.join(video_path, video_list[i])).astype(np.float32)
         # if 'drosophila' in args.dataset_dir:

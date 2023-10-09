@@ -12,6 +12,7 @@ from dataset import build_dataset
 from models import build_model
 from engine import train_one_epoch, evaluate
 
+
 def get_args_parser():
     parser = argparse.ArgumentParser('Hyper-Parameters Configuration', add_help=False)
     parser.add_argument('--lr', default=1e-4, type=float)
@@ -42,12 +43,13 @@ def get_args_parser():
     parser.add_argument('--num_workers', default=8, type=int)
 
     # distributed training parameters
-    parser.add_argument('--gpu_ids', default='0, 1, 2, 3', type=str, 
+    parser.add_argument('--gpu_ids', default='0, 1, 2, 3', type=str,
                         help='If GPU is used for training, specify the gpu ids in your machine')
     return parser
 
+
 def main(args):
-    os.environ["CUDA_VISIBLE_DEVICES"]= args.gpu_ids
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_ids
     device = torch.device(args.device)
 
     # fix the seed for reproducibility
@@ -63,9 +65,9 @@ def main(args):
     batch_num_train = len(dataset_train) // args.batch_size
     batch_num_val = len(dataset_val) // args.batch_size
 
-    data_loader_train = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True, 
+    data_loader_train = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True,
                                    num_workers=args.num_workers, drop_last=True)
-    data_loader_val = DataLoader(dataset_val, batch_size=args.batch_size, shuffle=False, 
+    data_loader_val = DataLoader(dataset_val, batch_size=args.batch_size, shuffle=False,
                                  num_workers=args.num_workers, drop_last=False)
 
     # build model
@@ -77,7 +79,7 @@ def main(args):
     # optimizer and learning strategy
     optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, betas=(0.5, 0.999))
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.lr_drop, gamma=0.9)
-    
+
     # tensorboard for loss and output visualization
     log_dir = os.path.join(args.output_dir, 'log')
     os.makedirs(log_dir, exist_ok=True)
@@ -91,7 +93,7 @@ def main(args):
         else:
             checkpoint = torch.load(args.resume, map_location='cpu')
         net.load_state_dict(checkpoint['net'])
-        
+
         # if not args.eval and 'optimizer' in checkpoint and 'lr_scheduler' in checkpoint and 'epoch' in checkpoint:
         #     optimizer.load_state_dict(checkpoint['optimizer'])
         #     lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
@@ -121,12 +123,12 @@ def main(args):
                     'epoch': epoch,
                     'args': args,
                 }, checkpoint_path)
-        
+
         print('[Epoch: %d/%d] [Total time: %s] [Speed: (%.4f s/iter)]'
-        %(epoch + 1,
-          args.epochs,
-          str(datetime.timedelta(seconds=int(time.time() - start_time_epoch))),
-          (time.time() - start_time_epoch) / batch_num_train))
+              % (epoch + 1,
+                 args.epochs,
+                 str(datetime.timedelta(seconds=int(time.time() - start_time_epoch))),
+                 (time.time() - start_time_epoch) / batch_num_train))
 
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
@@ -134,7 +136,8 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('Background Rejection Model Training and Evaluation Script', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('Background Rejection Model Training and Evaluation Script',
+                                     parents=[get_args_parser()])
     args = parser.parse_args()
     if args.output_dir:
         os.makedirs(args.output_dir, exist_ok=True)

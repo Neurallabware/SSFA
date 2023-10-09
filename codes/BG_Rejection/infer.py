@@ -14,8 +14,8 @@ def get_args_parser():
     parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--wo_mean', action='store_true')
 
-    parser.add_argument('--patch_size', default='', type=str)
-    parser.add_argument('--stride_size', default='', type=str)
+    parser.add_argument('--patch_size', default='(128, 128, 128)', type=str)
+    parser.add_argument('--stride_size', default='(96, 96, 96)', type=str)
 
     parser.add_argument('--gsize', default=8, type=int, help='neuron radius')
     parser.add_argument('--in_channels', default=1, type=int)

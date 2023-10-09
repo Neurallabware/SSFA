@@ -35,7 +35,7 @@ def main(args):
     latent_list.sort(key=lambda x: int(x.split('.')[0]))
 
     for index in range(len(rmbg_list)):
-        print(index + 1)
+        print(f"********** Video {index + 1} begins! **********")
         rmbg = tifffile.imread(os.path.join(args.rmbg_dir, rmbg_list[index])).astype(np.float32) / 65535
         latent = tifffile.imread(os.path.join(args.latent_dir, latent_list[index])).astype(np.float32) / 65535
 

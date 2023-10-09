@@ -1,10 +1,6 @@
 # DeepDefinite
 
-DeepDefinite is a universally applicable algorithm for neuron extraction. Its description and benchmarking can be found in [(##############)](http://www.nature.com/articles/ncomms12190).
-
-
-
-
+DeepDefinite is a universally applicable algorithm for neuron extraction. DeepDefinite is self-supervised and performs well. Its detailed description and benchmarking can be found in [(##############)](http://www.nature.com/articles/ncomms12190).
 
 ## **Getting Started**
 
@@ -28,42 +24,62 @@ cd DeepDefinite
 
 ### Prepare the dataset
 
-We provided our dataset here. Please download the dataset and put them into the folder `/dataset`. Of course, you can put your dataset in it. We assume the directory structure should be as follows.
+We provided our dataset here. Please download the dataset and put them into the folder `/datasets/dataset_orig`. Of course, you can put your dataset in it. We assume the directory structure should be as follows.
 
 ```
-dataset
-├── train
-│   ├── 1.tiff
-│   ├── 2.tiff
-│   └── ...
-├── test
-│   ├── 1.tiff
-│   ├── 2.tiff
-│   └── ...
-└── val
+datasets
+└── dataset_orig
     ├── 1.tiff
     ├── 2.tiff
     └── ...
 ```
 
-There are two folders named `/train` and `/test`. Each folder contains many tif or tiff files.
-
 ### Prepare the pretrained weights
 
 If you just want to have a try and skip the training process, please put our pretrained parameters into the folder `/output/BG_output/` and `/output/SEG_output/`
-
-
-
-
 
 ## **Remove the background**
 
 ### Training
 
-Training the background removal network can be performed using 
+Perhaps, the input videos are very large and thus GPU does not have enough space to store. In this case, we recommend to run
 
 ```bash
-python -u ./codes/BG_Rejection/main.py --wo_mean --gsize 7 --dataset_dir ./dataset --output_dir ./output/BG_output --gpu_ids 0,1,2,3
+python -u ./codes/BG_Rejection/crop.py \
+--patch_size '(64, 256, 256)' \
+--n_patch_all 150 \
+--dataset_dir ./datasets/dataset_orig \
+--output_dir ./datasets/dataset_in_patches_BG
+```
+
+The command will randomly crop patches from the original videos. This step is **optional** but **highly recommended**. The following parameters can be configured in the command.
+
+```python
+def get_args_parser():
+    parser = argparse.ArgumentParser('Hyper-Parameters Configuration', add_help=False)
+    # Patches
+    parser.add_argument('--patch_size', default='(64, 256, 256)', type=str, help='(T, H, W)')
+    parser.add_argument('--n_patch_all', default=150, type=int, help='random patch number of each whole video')
+    parser.add_argument('--n_patch_train', default=999999, type=int,
+                        help="random patch number for training, and the rest of patches are for eval."
+                             "However, we usually recommend to put all patches to `train` in the BG_Rejection stage")
+
+    # Paths
+    parser.add_argument('--dataset_dir', default='', type=str)
+    parser.add_argument('--output_dir', default='', type=str)
+    parser.add_argument('--seed', default=42, type=int)
+    return parser
+```
+
+Then, we can train the background removal network using 
+
+```bash
+python -u ./codes/BG_Rejection/main.py \
+--wo_mean \
+--gsize 8 \
+--dataset_dir ./datasets/dataset_orig \
+--output_dir ./output/BG_output \
+--gpu_ids 0,1,2,3
 ```
 
 The following parameters can be configured in the command.
@@ -109,7 +125,15 @@ def get_args_parser():
 Inference (i.e. background removal on given videos) can be performed using
 
 ```bash
-python -u ./codes/BG_Rejection/infer.py --wo_mean --gsize 7 --dataset_dir ./dataset/test --output_dir ./output/BG_output --ckpt_dir ./output/BG_output --patch_size '(128, 128, 128)' --stride_size '(96, 96, 96)' --gpu_ids 0,1,2,3
+python -u ./codes/BG_Rejection/infer.py \
+--wo_mean \
+--gsize 8 \
+--dataset_dir ./datasets/dataset_orig \
+--output_dir ./output/BG_output/res_videos \
+--ckpt_dir ./output/BG_output \
+--patch_size '(128, 128, 128)' \
+--stride_size '(96, 96, 96)' \
+--gpu_ids 0,1,2,3
 ```
 
 The following parameters can be configured in the command.
@@ -120,8 +144,8 @@ def get_args_parser():
     parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--wo_mean', action='store_true')
 
-    parser.add_argument('--patch_size', default='', type=str)
-    parser.add_argument('--stride_size', default='', type=str)
+    parser.add_argument('--patch_size', default='(128, 128, 128)', type=str)
+    parser.add_argument('--stride_size', default='(96, 96, 96)', type=str)
 
     parser.add_argument('--gsize', default=8, type=int, help='neuron radius')
     parser.add_argument('--in_channels', default=1, type=int)
@@ -138,28 +162,59 @@ def get_args_parser():
     return parser
 ```
 
-### Postprocessing
-
-If you still think the video is not clean enough after removing the background using the command above, please run
+If users still think the video is not clean enough after removing the background using the command above, please run
 
 ```bash
-python -u ./codes/BG_Rejection/postprocessing_discard.py --dataset_dir ./output/BG_output --threshold_max 0.5
+python -u ./codes/BG_Rejection/postprocessing_discard.py \
+--dataset_dir ./output/BG_output/res_videos \
+--threshold_max 0.5
 ```
 
 This command will perform thresholding on the processed videos. 
-
-
-
-
 
 ## Segmentation
 
 ### Training
 
-Training the background removal network can be performed using 
+Similarly, the input videos may be too large to put into GPU as a whole. In this case, we recommend to run
 
 ```bash
-python -u ./codes/Segmentation/main.py --wo_min --training_mode joint --gsize 7 --fps 15 --dataset_dir ./datasets --output_dir ./output/SEG_output --gpu_ids 0,1,2,3
+python -u ./codes/Segmentation/crop.py \
+--patch_size '(128, 128, 128)' \
+--n_patch_all 150 \
+--dataset_dir ./output/BG_output/res_videos/rmbg \
+--output_dir ./datasets/dataset_in_patches_SEG
+```
+
+The command will randomly crop patches from the original videos. Again, this step is **optional** but **highly recommended**. The following parameters can be configured in the command.
+
+```python
+def get_args_parser():
+    parser = argparse.ArgumentParser('Hyper-Parameters Configuration', add_help=False)
+    # Patches
+    parser.add_argument('--patch_size', default='(128, 128, 128)', type=str, help='(T, H, W)')
+    parser.add_argument('--n_patch_all', default=150, type=int, help='random patch number of each whole video')
+    parser.add_argument('--n_patch_train', default=100, type=int,
+                        help='random patch number for training, and the rest of patches are for eval')
+
+    # Paths
+    parser.add_argument('--dataset_dir', default='', type=str)
+    parser.add_argument('--output_dir', default='', type=str)
+    parser.add_argument('--seed', default=42, type=int)
+    return parser
+```
+
+Then, we can train the neuron segmentation network using 
+
+```bash
+python -u ./codes/Segmentation/main.py \
+--wo_min \
+--training_mode joint \
+--gsize 8 \
+--fps 15 \
+--dataset_dir ./datasets/dataset_in_patches_SEG \
+--output_dir ./output/SEG_output \
+--gpu_ids 0,1,2,3
 ```
 
 The following parameters can be configured in the command.
@@ -211,7 +266,18 @@ def get_args_parser():
 Inference (i.e. segmentation on given videos) can be performed using
 
 ```bash
-python -u ./codes/Segmentation/infer.py --wo_min --fps 15 --gsize 7 --dataset_dir ./output/BG_output/rmbg --output_dir ./output/SEG_output --ckpt_dir ./output/SEG_output --patch_size '(128, 128, 128)' --stride_size '(96, 96, 96)' --latent_patch_size '(128, 32, 32)' --latent_stride_size '(96, 24, 24)' --gpu_ids 0,1
+python -u ./codes/Segmentation/infer.py \
+--wo_min \
+--fps 15 \
+--gsize 8 \
+--dataset_dir ./output/BG_output/res_videos/rmbg \
+--output_dir ./output/SEG_output/res_videos \
+--ckpt_dir ./output/SEG_output \
+--patch_size '(128, 128, 128)' \
+--stride_size '(96, 96, 96)' \
+--latent_patch_size '(128, 32, 32)' \
+--latent_stride_size '(96, 24, 24)' \
+--gpu_ids 0,1
 ```
 
 The following parameters can be configured in the command.
@@ -249,4 +315,30 @@ def get_args_parser():
     return parser
 ```
 
-### Postprocessing
+Finally, postprocess the results by running
+
+```bash
+python -u ./codes/Segmentation/postprocessing.py \
+--gsize 8 \
+--rmbg_dir ./output/BG_output/res_videos/rmbg \
+--latent_dir ./output/SEG_output/res_videos/latent \
+--output_dir ./output/FINAL_output
+```
+
+The following parameters can be configured in the command.
+
+```python
+def get_args_parser():
+    parser = argparse.ArgumentParser('Hyper-Parameters Configuration', add_help=False)
+
+    parser.add_argument('--gsize', default=5, type=int)
+    parser.add_argument('--dataset_name', default='', type=str)
+    parser.add_argument('--rmbg_dir', default='', type=str)
+    parser.add_argument('--latent_dir', default='', type=str)
+    parser.add_argument('--output_dir', default='', type=str)
+    parser.add_argument('--intensity_threshold', default=0.8, type=float)
+    parser.add_argument('--temporal_threshold', default=0.3, type=float)
+    return parser
+```
+
+In the end, the final segmentation masks and extracted calcium signals will be stored in `./output/FINAL_output`.
