@@ -2,6 +2,12 @@
 
 DeepDefinite is a universally applicable algorithm for neuron extraction. DeepDefinite is self-supervised and performs well. Its detailed description and benchmarking can be found in [(##############)](http://www.nature.com/articles/ncomms12190).
 
+
+
+[TOC]
+
+
+
 ## **Getting Started**
 
 ### Prerequisites
