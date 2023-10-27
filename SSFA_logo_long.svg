@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399.647 165.329">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: EngraversMT, 'Engravers MT';
+        font-size: 48px;
+        letter-spacing: .02em;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: #231815;
+      }
+
+      .cls-2 {
+        font-size: 144px;
+      }
+
+      .cls-2, .cls-3 {
+        font-family: EdwardianScriptITC, 'Edwardian Script ITC';
+      }
+
+      .cls-3 {
+        font-size: 65px;
+      }
+    </style>
+  </defs>
+  <text class="cls-2" transform="translate(0 118.078)"><tspan x="0" y="0">D</tspan></text>
+  <text class="cls-3" transform="translate(136.306 67.125)"><tspan x="0" y="0">eep</tspan></text>
+  <text class="cls-2" transform="translate(0 118.078)"><tspan x="0" y="0">D</tspan></text>
+  <text class="cls-1" transform="translate(134.435 118.078)"><tspan x="0" y="0">efinite</tspan></text>
+</svg>
