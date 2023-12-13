@@ -19,7 +19,14 @@ DeepDefinite is a universally applicable algorithm for neuron extraction. DeepDe
 
 ## **Getting Started**
 
-### Prerequisites
+### Dataset, website and plugin
+The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded at https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link
+
+To get a live preview of the dataset or process your data online, please visit our webapp: http://region-31.seetacloud.com:36894/
+
+The deepdefinite pipeline can also be used as a Fiji plugin: https://drive.google.com/drive/folders/1RCdgfLWDkRIgK-xEiY2Nl4R29YXpqVAB?usp=drive_link
+
+### Use in python: Prerequisites
 
 - Python 3
 - NVIDIA GPU + CUDA CuDNN
@@ -360,9 +367,3 @@ def get_args_parser():
 
 In the end, the final segmentation masks and extracted calcium signals will be stored in `./output/FINAL_output`.
 
-### Dataset, website and plugin
-The MultiModel NeuralImaging Benchmark (MMNIB) dataset at https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link
-
-To get a live preview of the dataset or process your data online, please visit our webapp: http://region-31.seetacloud.com:36894/
-
-The deepdefinite pipeline can also be used with a Fiji plugin: https://drive.google.com/drive/folders/1RCdgfLWDkRIgK-xEiY2Nl4R29YXpqVAB?usp=drive_link
