@@ -359,3 +359,6 @@ def get_args_parser():
 ```
 
 In the end, the final segmentation masks and extracted calcium signals will be stored in `./output/FINAL_output`.
+
+### Dataset 
+You can download the MultiModel NeuralImaging Benchmark (MMNIB) dataset at https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link
