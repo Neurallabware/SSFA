@@ -2,7 +2,7 @@
 
 DeepDefinite is an algorithm for accurate neuron extraction on single-photon (1p) videos beyond the inherent background limit of 1p microscopy.
 
-DeepDefinite is self-supervised but performs well. To have a taste, please visit our webapp: http://region-31.seetacloud.com:36894/.
+DeepDefinite is self-supervised but performs well. Welcome to our webapp: http://region-31.seetacloud.com:36894/.
 
 The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link).
 
@@ -25,11 +25,53 @@ The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded [here](
 
 ## Overview
 
-### Input & Output
+### Overall pipeline
+
+![pipeline](readme_figs/pipeline.png)
+
+DeepDefinite consists of two main modules:
+
+- 1. Background rejection module
+- 2. Segmentation module
 
 
 
-### Parameters
+The input of DeepDefinite is a set of raw 1p recordings sharing similar data modality.
+
+The background rejection module will output background-removed videos, and spatial footprints and temporal traces will be provided by segmentation module.
+
+
+
+
+
+### Important Parameters
+
+#### **Parameters characterizing the calcium imaging video**
+
+- **Neuron size**: expected half size of neurons. To measure the neuron size, one can use Fiji to isolate a single neuron from input 1p calcium movie, and plot its intensity profile to determine the optimal value. 
+- **Size of ring-shaped filter**: By default, the diameter of the ring-shaped filter is configured to be 1.5 times the diameter of the neuron. The thickness of this annular filter is set at two pixels with a uniform weight.
+
+- **Acquisition frame rate**: the acquisition frame rate (in Hz) of the calcium movie.
+
+- **$\tau_{on}$ and $\tau_{off}$**: calcium response on and off parameters, which depends on the types of calcium indicators. In the majority of datasets, we configured $\tau_{on}$ to be exceptionally minimal to ensure a sharp ascent in the calcium response, whereas $\tau_{off}$ was contingent upon the specific calcium indicators and corresponding genetic lines.
+
+
+
+#### **Parameters characterizing the network training**
+
+- **Threshold post the data-cleanse network**: We remove remaining residuals after the background rejection module based on the threshold post the data-cleanse network. The threshold constituted a hyperparameter, typically configured at 0.4 of the maximum value in the processed input movie, following the exclusion of the top 1st percentiles of bright pixels. Subsequently, it is processed by a sparsification network.
+- **Initial learning rate**: The learning rate dictates the magnitude of each iterative step throughout the network training process. In the implementation of DeepDefinite, this parameter undergoes a decay factor of 0.5 at 10-epoch intervals, commencing from its initial value. Elevated initial learning rates generally accelerate model convergence but may concurrently introduce instability into the training regimen. As such, the initial learning rate is empirically established at 1e-4.
+
+- **Patch size**: The dimensionality of the patch size influences the resultant image morphology with implications for both the computational efficiency and efficacy of the trained neural network models. In the interest of expediting the training regimen, we generally opt for a modest patch size of 128×128×128 pixels, which also serves as the default configuration in our Python implementations.
+
+- **Batch size**: The batch size which is defined as the quantity of samples employed for each training epoch exerts impacts on both the speed of model convergence and the generalizability of the resultant neural network. Extremes in batch size—either excessively large or diminutive—can precipitate challenges, such as memory overload or erratic convergence patterns. Within the experimental framework of this study, we judiciously selected a moderate batch size of 32, applicable to both the data cleanse and sparsification networks.
+
+- **Total epoch**: The total number of epochs delineates the cumulative iterations throughout the training process. Customarily, we establish a total of 30 epochs for both the data cleanse and sparsification networks, a quantity demonstrated to facilitate network convergence in the majority of experimental scenarios.
+
+- **Loss weights**: We utilized mixed L1 loss (weight 1) and L2 loss (weight 1) for data cleanse network, and mixed L1 loss (weight 1) and sparse loss (weight 10) for the sparsification network.
+- **Threshold of spatial clustering**. We employed spatial hierarchical clustering to cluster neuron segments situated in proximate locations. The default spatial clustering threshold is configured to the dimensions of a single neuron, ensuring that a cluster does not significantly exceed the size of an individual neuron.
+
+- **Threshold of temporal clustering**. We employed temporal hierarchical clustering to cluster neuron segments subject to the spatial clustering according to the pairwise correlations of the temporal traces. The default temporal correlation threshold is set to be 0.7.
 
 
 
@@ -44,7 +86,7 @@ The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded at http
 
 ### Use in website
 
-The website is the easiest and simplest way to use DeepDenfinite. Please visit our webapp: http://region-31.seetacloud.com:36894/
+The website is the easiest and simplest way to use DeepDenfinite. Welcome to our webapp: http://region-31.seetacloud.com:36894/
 
 
 
@@ -76,7 +118,7 @@ cd DeepDefinite
 
 #### Prepare the dataset
 
-We provided our dataset [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link). Please download the dataset and put them into the folder `/datasets/dataset_orig`. Of course, you can put your dataset in it. We assume the directory structure should be as follows.
+We provided our dataset [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link). Prepare the raw 1p recordings and put them into the folder `/datasets/dataset_orig`. Of course, you are welcome to put your dataset in it. This github demo assumes the directory structure should be as follows.
 
 ```
 datasets
@@ -86,7 +128,7 @@ datasets
     └── ...
 ```
 
-If you just want to have a simple try and skip the training process, we have prepared a set of pretrained parameters for dataset `5_macro_5x` (a part of MMNIB dataset) in this github repo. Please download the 1p videos of `5_macro_5x` and put them into `/datasets/dataset_orig`.
+If you just want to have a simple try and skip the training process, we have prepared a set of pretrained parameters for dataset `5_macro_5x` (a part of MMNIB dataset) in this github repo. Please download the 1p videos of `5_macro_5x`  [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link) and put them into `/datasets/dataset_orig`.
 
 
 
@@ -399,13 +441,13 @@ def get_args_parser():
     return parser
 ```
 
-In the end, the final segmentation masks and extracted calcium signals will be stored in `./output/FINAL_output`.
+In the end, the segmented seeds of neurons will be stored at `./output/FINAL_output/seg` and the extracted calcium signals will be saved at `./output/FINAL_output/sig`. 
 
 
 
 ## Visualize the footprints (optional)
 
-To grow the footprints of neurons from the segmented seeds, please run
+Even though the segmented seeds of neurons are enough for extracting calcium signals, some users may need footprints of neurons. To grow the footprints of neurons from the segmented seeds, please run
 
 ```bash
 python -u ./codes/Visualization/gen_footprints.py
