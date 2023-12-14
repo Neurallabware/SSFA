@@ -186,6 +186,8 @@ def get_args_parser():
     return parser
 ```
 
+### Postprocessing (optional)
+
 If users still think the video is not clean enough after removing the background using the command above, please run
 
 ```bash
@@ -341,7 +343,9 @@ def get_args_parser():
     return parser
 ```
 
-Finally, postprocess the results by running
+### Postprocessing
+
+Finally, get the final segmentation results by running
 
 ```bash
 python -u ./codes/Segmentation/postprocessing.py \
