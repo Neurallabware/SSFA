@@ -2,9 +2,9 @@
 
 DeepDefinite is a universally applicable algorithm for neuron extraction on one-photon (1p) videos. DeepDefinite is self-supervised and performs well. 
 
-![video_sample_1_wo_opening](E:\000 - Jerry Files\001 - Projects\SSFA\000 - project codes\SSFA_github\video_sample_1_wo_opening.gif)
+![video_sample_1_wo_opening](readme_figs/video_sample_1_wo_opening.gif)
 
-![SSFA_logo_long](SSFA_logo_long.svg)
+![SSFA_logo_long](readme_figs/SSFA_logo_long.svg)
 
 - [**DeepDefinite**](#deepdefinite)
   - [**Getting Started**](#getting-started)
