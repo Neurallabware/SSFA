@@ -2,7 +2,9 @@
 
 DeepDefinite is an algorithm for accurate neuron extraction on single-photon (1p) videos beyond the inherent background limit of 1p microscopy.
 
-DeepDefinite is self-supervised but performs well. 
+DeepDefinite is self-supervised but performs well. To have a taste, please visit our webapp: http://region-31.seetacloud.com:36894/.
+
+The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link).
 
 ![video_sample_1_wo_opening](readme_figs/video_sample_1_wo_opening.gif)
 
@@ -21,23 +23,47 @@ DeepDefinite is self-supervised but performs well.
     - [Training](#training-1)
     - [Segmentation](#segmentation-1)
 
+## Overview
+
+### Input & Output
+
+
+
+### Parameters
+
+
+
+
+
 ## **Getting Started**
 
-### Dataset, website and plugin
+### Dataset
 The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded at https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link
 
-To get a live preview of the dataset or process your data online, please visit our webapp: http://region-31.seetacloud.com:36894/
 
-The deepdefinite pipeline can also be used as a Fiji plugin: https://drive.google.com/drive/folders/1RCdgfLWDkRIgK-xEiY2Nl4R29YXpqVAB?usp=drive_link
 
-### Use in python: Prerequisites
+### Use in website
+
+The website is the easiest and simplest way to use DeepDenfinite. Please visit our webapp: http://region-31.seetacloud.com:36894/
+
+
+
+### Use as a Fiji plugin
+
+The deepdefinite pipeline can also be used as a Fiji Imagej plugin, which is provided here: https://drive.google.com/drive/folders/1RCdgfLWDkRIgK-xEiY2Nl4R29YXpqVAB?usp=drive_link
+
+
+
+### Use in python
+
+#### Prerequisites
 
 - Python 3
 - NVIDIA GPU + CUDA + CuDNN
 
 Note: Perhaps users can run the codes we provided using only the CPU, but using GPU is highly recommended.
 
-### Install
+#### Install
 
 - Clone the repository:
 
@@ -48,9 +74,9 @@ cd DeepDefinite
 
 - Dependencies: We recommend running this repository using [Anaconda](https://docs.anaconda.com/anaconda/install/). The codes are tested under `PyTorch 1.9.1` and `CUDA 11.3`. Please install them under the instructions [here](https://pytorch.org/get-started/previous-versions/#v191). All the required packages are listed in `requirements.txt`.
 
-### Prepare the dataset
+#### Prepare the dataset
 
-We provided our dataset here. Please download the dataset and put them into the folder `/datasets/dataset_orig`. Of course, you can put your dataset in it. We assume the directory structure should be as follows.
+We provided our dataset [here](https://drive.google.com/drive/folders/1095PivRqH5rDVSg9dDG2ixeqUUNveGmw?usp=drive_link). Please download the dataset and put them into the folder `/datasets/dataset_orig`. Of course, you can put your dataset in it. We assume the directory structure should be as follows.
 
 ```
 datasets
@@ -60,9 +86,9 @@ datasets
     └── ...
 ```
 
-### Prepare the pretrained weights
+If you just want to have a simple try and skip the training process, we have prepared a set of pretrained parameters for dataset `5_macro_5x` (a part of MMNIB dataset) in this github repo. Please download the 1p videos of `5_macro_5x` and put them into `/datasets/dataset_orig`.
 
-If you just want to have a try and skip the training process, please put our pretrained parameters into the folder `/output/BG_output/` and `/output/SEG_output/`
+
 
 ## **Remove the background**
 
@@ -374,4 +400,34 @@ def get_args_parser():
 ```
 
 In the end, the final segmentation masks and extracted calcium signals will be stored in `./output/FINAL_output`.
+
+
+
+## Visualize the footprints (optional)
+
+To grow the footprints of neurons from the segmented seeds, please run
+
+```bash
+python -u ./codes/Visualization/gen_footprints.py
+```
+
+The following parameters can be configured in the command.
+
+```python
+def get_args_parser():
+    parser = argparse.ArgumentParser('Hyper-Parameters Configuration', add_help=False)
+
+    # Params
+    parser.add_argument('--corr_thre', default=0.5, type=float, help='Correlation coefficient threshold')
+    parser.add_argument('--R', default=2, type=int, help='Radius of struct using to grow footprints. In general, the larger the `R`, the larger the `corr_thre` should be.')
+    parser.add_argument('--max_iter', default=100, type=int, help='Max iterations for growing footprints')
+
+    # Paths
+    parser.add_argument('--rmbg_dir', default='./output/BG_output/res_videos/rmbg', type=str)
+    parser.add_argument('--seg_dir', default='./output/FINAL_output/seg', type=str)
+    parser.add_argument('--output_dir', default='./output/FINAL_output/footprints', type=str)
+    return parser
+```
+
+In the end, the final footprints will also be stored in `./output/FINAL_output` by default.
 
