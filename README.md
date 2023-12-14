@@ -1,6 +1,8 @@
 # **DeepDefinite**
 
-DeepDefinite is a universally applicable algorithm for neuron extraction on one-photon (1p) videos. DeepDefinite is self-supervised and performs well. 
+DeepDefinite is an algorithm for accurate neuron extraction on single-photon (1p) videos beyond the inherent background limit of 1p microscopy.
+
+DeepDefinite is self-supervised but performs well. 
 
 ![video_sample_1_wo_opening](readme_figs/video_sample_1_wo_opening.gif)
 
