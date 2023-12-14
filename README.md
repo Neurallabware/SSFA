@@ -1,6 +1,8 @@
 # **DeepDefinite**
 
-DeepDefinite is a universally applicable algorithm for neuron extraction. DeepDefinite is self-supervised and performs well. Its detailed description and benchmarking can be found in [(##############)](http://www.nature.com/articles/ncomms12190).
+DeepDefinite is a universally applicable algorithm for neuron extraction on one-photon (1p) videos. DeepDefinite is self-supervised and performs well. 
+
+![video_sample_1_wo_opening](E:\000 - Jerry Files\001 - Projects\SSFA\000 - project codes\SSFA_github\video_sample_1_wo_opening.gif)
 
 ![SSFA_logo_long](SSFA_logo_long.svg)
 
@@ -29,9 +31,9 @@ The deepdefinite pipeline can also be used as a Fiji plugin: https://drive.googl
 ### Use in python: Prerequisites
 
 - Python 3
-- NVIDIA GPU + CUDA CuDNN
+- NVIDIA GPU + CUDA + CuDNN
 
-Note: Perhaps users can run the codes we provided using only the CPU, but using CUDA is highly recommended.
+Note: Perhaps users can run the codes we provided using only the CPU, but using GPU is highly recommended.
 
 ### Install
 
