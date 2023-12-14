@@ -10,18 +10,32 @@ The MultiModel NeuralImaging Benchmark (MMNIB) dataset can be downloaded [here](
 
 ![SSFA_logo_long](readme_figs/SSFA_logo_long.svg)
 
+
 - [**DeepDefinite**](#deepdefinite)
+  - [Overview](#overview)
+    - [Overall pipeline](#overall-pipeline)
+    - [Important Parameters](#important-parameters)
+      - [Parameters characterizing the calcium imaging video](#parameters-characterizing-the-calcium-imaging-video)
+      - [Parameters characterizing the network training](#parameters-characterizing-the-network-training)
   - [**Getting Started**](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Prepare the dataset](#prepare-the-dataset)
-    - [Prepare the pretrained weights](#prepare-the-pretrained-weights)
+    - [Dataset](#dataset)
+    - [Use in website](#use-in-website)
+    - [Use as a Fiji plugin](#use-as-a-fiji-plugin)
+    - [Use in python](#use-in-python)
+      - [Prerequisites](#prerequisites)
+      - [Install](#install)
+      - [Prepare the dataset](#prepare-the-dataset)
   - [**Remove the background**](#remove-the-background)
     - [Training](#training)
     - [Background removal](#background-removal)
+    - [Postprocessing (optional)](#postprocessing-optional)
   - [**Segmentation**](#segmentation)
     - [Training](#training-1)
     - [Segmentation](#segmentation-1)
+    - [Postprocessing](#postprocessing)
+  - [**Visualize the footprints (optional)**](#visualize-the-footprints-optional)
+
+
 
 ## Overview
 
@@ -46,7 +60,7 @@ The background rejection module will output background-removed videos, and spati
 
 ### Important Parameters
 
-#### **Parameters characterizing the calcium imaging video**
+#### Parameters characterizing the calcium imaging video
 
 - **Neuron size**: expected half size of neurons. To measure the neuron size, one can use Fiji to isolate a single neuron from input 1p calcium movie, and plot its intensity profile to determine the optimal value. 
 - **Size of ring-shaped filter**: By default, the diameter of the ring-shaped filter is configured to be 1.5 times the diameter of the neuron. The thickness of this annular filter is set at two pixels with a uniform weight.
@@ -57,7 +71,7 @@ The background rejection module will output background-removed videos, and spati
 
 
 
-#### **Parameters characterizing the network training**
+#### Parameters characterizing the network training
 
 - **Threshold post the data-cleanse network**: We remove remaining residuals after the background rejection module based on the threshold post the data-cleanse network. The threshold constituted a hyperparameter, typically configured at 0.4 of the maximum value in the processed input movie, following the exclusion of the top 1st percentiles of bright pixels. Subsequently, it is processed by a sparsification network.
 - **Initial learning rate**: The learning rate dictates the magnitude of each iterative step throughout the network training process. In the implementation of DeepDefinite, this parameter undergoes a decay factor of 0.5 at 10-epoch intervals, commencing from its initial value. Elevated initial learning rates generally accelerate model convergence but may concurrently introduce instability into the training regimen. As such, the initial learning rate is empirically established at 1e-4.
@@ -445,7 +459,7 @@ In the end, the segmented seeds of neurons will be stored at `./output/FINAL_out
 
 
 
-## Visualize the footprints (optional)
+## **Visualize the footprints (optional)**
 
 Even though the segmented seeds of neurons are enough for extracting calcium signals, some users may need footprints of neurons. To grow the footprints of neurons from the segmented seeds, please run
 
