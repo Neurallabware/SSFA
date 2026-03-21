@@ -149,6 +149,34 @@ The web UI accepts MP4/TIFF input, runs full SSFA inference, and exports:
 ./webapp/launch.sh 0
 ```
 
+## Fiji Plugin Packages
+
+This repository ships local SSFA Fiji/DeepImageJ plugin bundles in `Plugin/`:
+- `Plugin/rmbg_plugin.zip`: background rejection model package
+- `Plugin/segmentation_plugin.zip`: segmentation model package
+
+If you clone this repository on a new machine, fetch plugin artifacts first:
+
+```bash
+git lfs install
+git lfs pull --include "Plugin/*.zip"
+```
+
+Install and run:
+
+```bash
+unzip Plugin/rmbg_plugin.zip -d Plugin/
+unzip Plugin/segmentation_plugin.zip -d Plugin/
+```
+
+In Fiji (with DeepImageJ installed):
+- Open `Plugins -> DeepImageJ -> Run`.
+- Select one plugin descriptor:
+  - `Plugin/rmbg_plugin/rdf.yaml`
+  - `Plugin/segmentation_plugin/rdf.yaml`
+
+Keep each extracted plugin folder intact because `rdf.yaml` references local assets (for example `General.jar` and `fiji.pt`) by relative path.
+
 ## Legacy Compatibility
 
 Original scripts remain unchanged in `codes/` and can still be called directly, for example:
@@ -172,4 +200,4 @@ For `task=infer_full`, default staged outputs are:
 
 - Input videos for the inference scripts should contain at least 128 frames for temporal patching.
 - Web UI runtime folders (`webapp/jobs/`, `webapp/jobs_full_test/`) are generated on demand and ignored by git.
-- MMNIB dataset and Fiji plugin links from prior releases remain applicable.
+- Plugin zip artifacts are tracked with Git LFS.
