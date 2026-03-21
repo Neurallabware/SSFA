@@ -1,11 +1,15 @@
 # SSFA
 
+![SSFA logo](readme_figs/SSFA_logo_long.png)
+
 SSFA stands for **Self-Supervised Functional Analysis**.
 
 SSFA is a self-supervised pipeline for neuron extraction on single-photon (1p) calcium videos. The repository contains:
 - Original BG rejection + segmentation scripts in `codes/`
 - A Hydra orchestration layer in `src/` and `configs/`
 - A Gradio web UI in `webapp/`
+
+![video sample](readme_figs/video_sample_1_wo_opening.gif)
 
 ![pipeline](readme_figs/pipeline.png)
 
