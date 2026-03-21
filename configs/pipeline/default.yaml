@@ -1,0 +1,15 @@
+input_dir: ${paths.data_dir}/dataset_orig
+output_dir: ${paths.output_dir}/pipeline_output
+bg_ckpt_dir: ${paths.bg_ckpt_dir}
+seg_ckpt_dir: ${paths.seg_ckpt_dir}
+device: cuda
+gpu_ids: "0"
+force_checkpoint_compat: true
+
+visualize:
+  corr_thre: 0.5
+  R: 2
+  max_iter: 100
+  rmbg_dir: ${pipeline.output_dir}/bg_stage/rmbg
+  seg_dir: ${pipeline.output_dir}/final_output/seg
+  output_dir: ${pipeline.output_dir}/final_output/footprints

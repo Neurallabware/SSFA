@@ -1,0 +1,69 @@
+crop:
+  patch_size: [128, 128, 128]
+  n_patch_all: 150
+  n_patch_train: 100
+  dataset_dir: ${bg.post.dataset_dir}/${bg.post.dataset_name}
+  output_dir: ${paths.data_dir}/dataset_in_patches_SEG
+  seed: 42
+
+train:
+  lr: 0.0001
+  lr_drop: 10
+  batch_size: 32
+  start_epoch: 0
+  epochs: 100
+  wo_min: true
+  normalize_factor: 1
+  training_mode: joint
+  gsize: 8
+  fps: 15
+  ext_rate: 292.3
+  in_channels: 1
+  out_channels: 1
+  f_maps: 32
+  n_fmaps: 3
+  L1_weight: 1.0
+  L2_weight: 0.0
+  Sparse_weight: 10.0
+  dataset_name: ""
+  dataset_dir: ${paths.data_dir}/dataset_in_patches_SEG
+  output_dir: ${paths.output_dir}/SEG_output
+  seed: 42
+  device: cuda
+  resume: ""
+  eval: false
+  num_workers: 8
+  gpu_ids: "0"
+
+infer:
+  batch_size: 1
+  wo_min: true
+  normalize_factor: 1
+  patch_size: [128, 128, 128]
+  stride_size: [96, 96, 96]
+  latent_patch_size: [128, 32, 32]
+  latent_stride_size: [96, 24, 24]
+  training_mode: joint
+  fps: 15
+  gsize: 8
+  ext_rate: 292.3
+  in_channels: 1
+  out_channels: 1
+  f_maps: 32
+  n_fmaps: 3
+  dataset_name: ""
+  dataset_dir: ${bg.post.dataset_dir}/${bg.post.dataset_name}
+  output_dir: ${paths.output_dir}/SEG_output/res_videos
+  ckpt_dir: ${paths.seg_ckpt_dir}
+  ckpt_dir2: ""
+  device: cuda
+  gpu_ids: "0"
+
+post:
+  gsize: ${seg.infer.gsize}
+  dataset_name: ""
+  rmbg_dir: ${bg.post.dataset_dir}/${bg.post.dataset_name}
+  latent_dir: ${seg.infer.output_dir}/latent${seg.post.dataset_name}
+  output_dir: ${paths.output_dir}/FINAL_output
+  intensity_threshold: 0.8
+  temporal_threshold: 0.3

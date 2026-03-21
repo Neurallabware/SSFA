@@ -1,0 +1,9 @@
+port: ${oc.env:WEBUI_PORT,7860}
+share: false
+device: ${oc.env:WEBUI_DEVICE,0}
+device_type: ${oc.env:WEBUI_DEVICE_TYPE,auto}
+work_dir: ${oc.env:WEBUI_WORK_DIR,${paths.webapp_dir}/jobs}
+max_workers: 1
+bg_ckpt_dir: ${oc.env:BG_CKPT_DIR,${paths.bg_ckpt_dir}}
+seg_ckpt_dir: ${oc.env:SEG_CKPT_DIR,${paths.seg_ckpt_dir}}
+server_name: 0.0.0.0

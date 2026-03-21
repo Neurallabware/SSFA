@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Hydra outputs
+logs/
+
+# Web UI runtime artifacts
+webapp/jobs/
+webapp/jobs_full_test/
+webapp/*.log
+webapp/*.zip
+
+# Editor
+.DS_Store

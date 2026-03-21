@@ -1,0 +1,11 @@
+# @package _global_
+defaults:
+  - _self_
+  - paths: default
+  - pipeline: default
+  - bg: default
+  - seg: default
+  - hydra: default
+
+task_name: pipeline
+task: infer_full

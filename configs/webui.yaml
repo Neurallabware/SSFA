@@ -1,0 +1,8 @@
+# @package _global_
+defaults:
+  - _self_
+  - paths: default
+  - webui: default
+  - hydra: default
+
+task_name: webui

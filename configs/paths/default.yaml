@@ -1,0 +1,7 @@
+root_dir: ${oc.env:PROJECT_ROOT,${hydra:runtime.cwd}}
+data_dir: ${paths.root_dir}/datasets
+output_dir: ${paths.root_dir}/output
+log_dir: ${paths.root_dir}/logs
+webapp_dir: ${paths.root_dir}/webapp
+bg_ckpt_dir: ${paths.output_dir}/BG_output
+seg_ckpt_dir: ${paths.output_dir}/SEG_output
