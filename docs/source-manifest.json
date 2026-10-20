@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository": "Neurallabware/SSFA",
+  "source_commit": "736c35d59698b3d5940348feb4d95cca78910d01",
+  "reviewed_date": "2026-10-20",
+  "source_files": [
+    "README.md",
+    "environment.yaml",
+    "requirements.txt",
+    "src/pipeline.py",
+    "configs/pipeline/default.yaml"
+  ],
+  "verification_scope": "Documentation and inspected source interfaces; scientific execution not performed."
+}
